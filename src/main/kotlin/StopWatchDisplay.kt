@@ -1,3 +1,4 @@
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -42,7 +43,7 @@ fun StopWatchDisplay(
                 Text("Pause")
             }
             Spacer(Modifier.width(16.dp))
-            Button(onResetClick) {
+            Button(onResetClick){
                 Text("Reset")
             }
         }

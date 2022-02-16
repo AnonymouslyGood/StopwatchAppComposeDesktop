@@ -2,11 +2,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.*
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.util.*
 
 class StopWatch {
 
@@ -19,19 +14,21 @@ class StopWatch {
     private var lastTimestamp = 0L
 
     fun start() {
-        if (isActive) return
+        if(isActive) return
 
         coroutineScope.launch {
-            lastTimestamp = System.currentTimeMillis()
             this@StopWatch.isActive = true
-            while (isActive) {
-                delay(10L)
-                timeMillis += System.currentTimeMillis() - lastTimestamp
+            while(this@StopWatch.isActive) {
                 lastTimestamp = System.currentTimeMillis()
+                delay(1L)
+                timeMillis += System.currentTimeMillis() - lastTimestamp
                 formattedTime = formatTime(timeMillis)
             }
         }
     }
+
+
+
 
     fun pause() {
         isActive = false
@@ -47,11 +44,15 @@ class StopWatch {
     }
 
     private fun formatTime(timeMillis: Long): String {
-        val localDateTime = LocalDateTime.ofInstant(
-            Instant.ofEpochMilli(timeMillis),
-            ZoneId.systemDefault()
-        )
-        val formatter = DateTimeFormatter.ofPattern("mm:ss:SSS", Locale.getDefault())
-        return localDateTime.format(formatter)
+
+        var seconds=((timeMillis/1000)%60).toString()
+        if(seconds.length==1) seconds= "0$seconds"
+        var minutes=((timeMillis/(1000*60))%60).toString()
+        if(minutes.length==1) minutes="0$minutes"
+        var millis=((timeMillis)%1000).toString()
+        if(millis.length==1) millis="00$millis"
+        else if(millis.length==2) millis="0$millis"
+
+        return "$minutes:$seconds:$millis"
     }
 }
